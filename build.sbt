@@ -1,8 +1,12 @@
-lazy val root = (project in file("."))
+ThisBuild / scalaVersion := "3.3.4"
+
+lazy val testSuite = (project in file("."))
+  .disablePlugins(JUnitXmlReportPlugin) // Required to prevent https://github.com/scalatest/scalatest/issues/1427
   .settings(
-    name := "sa-prepop-api-tests",
-    version := "0.1.0",
-    scalaVersion := "3.3.4",
-    libraryDependencies ++= Dependencies.test,
-    (Compile / compile) := ((Compile / compile) dependsOn (Compile / scalafmtSbtCheck, Compile / scalafmtCheckAll)).value
+    name := "sa-pre-pop-api-tests",
+    version := "2.0.0",
+    scalacOptions += "-feature",
+    libraryDependencies ++= AppDependencies()
   )
+
+addCommandAlias("scalafmtAll", "all scalafmtSbt scalafmt Test/scalafmt")
