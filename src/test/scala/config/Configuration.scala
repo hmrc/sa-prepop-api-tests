@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,10 @@ case class Configuration(
   APP_INCOME_ROOT: String,
   APP_TAX_ROOT: String,
   STUB_ROOT: String,
-  AUTH_ROOT: String
+  AUTH_ROOT: String,
+  APP_NATIONAL_INSURANCE_ROOT: String,
+  STUB_NATIONAL_INSURANCE_ROOT: String,
+  AUTH_NATIONAL_INSURANCE_ROOT: String
 )
 
 object Configuration {
@@ -40,7 +43,10 @@ object Configuration {
           APP_INCOME_ROOT = "http://localhost:9623",
           APP_TAX_ROOT = "http://localhost:9624",
           STUB_ROOT = "http://localhost:9689",
-          AUTH_ROOT = "http://localhost:8585"
+          AUTH_ROOT = "http://localhost:8585",
+          APP_NATIONAL_INSURANCE_ROOT = "http://localhost:9626",
+          STUB_NATIONAL_INSURANCE_ROOT = "http://localhost:9688",
+          AUTH_NATIONAL_INSURANCE_ROOT = "http://localhost:8585"
         )
       case _       => throw new IllegalArgumentException(s"Environment '$environmentProperty' not known")
     }

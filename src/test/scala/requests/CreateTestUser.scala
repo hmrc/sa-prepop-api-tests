@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,15 @@ object CreateTestUser extends HttpPostRequest {
 
   def createTestUserData(utr: String, taxYear: String, scenario: String, urlPath: String): Int = {
     val url  = s"${Configuration.settings.STUB_ROOT}/sa/$utr/$urlPath/annual-summary/$taxYear"
+    val body = s"""{
+                  |"scenario": "$scenario"
+                  |}""".stripMargin
+
+    executeRestWithBodyCall(url, body).status
+  }
+
+  def createNationalInsuranceTestUserData(utr: String, taxYear: String, scenario: String): Int = {
+    val url  = s"${Configuration.settings.STUB_NATIONAL_INSURANCE_ROOT}/sa/$utr/annual-summary/$taxYear"
     val body = s"""{
                   |"scenario": "$scenario"
                   |}""".stripMargin
