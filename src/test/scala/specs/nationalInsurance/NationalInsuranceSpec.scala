@@ -14,53 +14,39 @@
  * limitations under the License.
  */
 
-package specs.tax
+package specs.nationalInsurance
 
 import http.HttpHeaders
 import models.*
+import models.NationalInsuranceResponse.{firstNationalInsuranceResponse, secondNationalInsuranceResponse}
 import models.Scenario.{HAPPY_PATH_1, HAPPY_PATH_2}
-import requests.CreateTestUser.createTestUserData
-import requests.GetIndividualTax
+import requests.CreateTestUser.createNationalInsuranceTestUserData
+import requests.GetNationalInsurance
 import requests.LocalBearerGenerator.fetchBearerToken
 import specs.BaseSpec
 
-class IndividualTaxSpec extends BaseSpec {
+class NationalInsuranceSpec extends BaseSpec {
 
-  override val serviceUnderTest: String = "tax"
-
-  val maximumModel: IndividualTaxResponse = IndividualTaxResponse(
-    StateBenefits(None, None),
-    Refund(None),
-    List(IndividualTaxEmployment(employerPayeReference = "111/AAA", taxTakenOffPay = 3000))
-  )
-
-  val minimumModel: IndividualTaxResponse = IndividualTaxResponse(
-    StateBenefits(otherPensionsAndRetirementAnnuities = Option(36.50), incapacityBenefit = Option(980.45)),
-    Refund(taxRefundedOrSetOff = Option(325.00)),
-    List(
-      IndividualTaxEmployment(employerPayeReference = "123/AB456", taxTakenOffPay = 890.35),
-      IndividualTaxEmployment(employerPayeReference = "456/AB456", taxTakenOffPay = 224.99)
-    )
-  )
+  override val serviceUnderTest: String = "insurance"
 
   def successTest(testCase: SuccessSaPrePopTestInput): Unit =
-    s"return ${testCase.expectedStatusCode} when calling individual-$serviceUnderTest with UTR: ${testCase.saUtr} and tax year: ${testCase.taxYearRange} and bearer: ${testCase.bearerToken.toString} for scenario: ${testCase.scenario}" in {
-      createTestUserData(testCase.saUtr, testCase.taxYearRange, testCase.scenario.toString, serviceUnderTest)
+    s"return ${testCase.expectedStatusCode} when calling national-$serviceUnderTest with UTR: ${testCase.saUtr} and tax year: ${testCase.taxYearRange} and bearer: ${testCase.bearerToken.toString} for scenario: ${testCase.scenario}" in {
+      createNationalInsuranceTestUserData(testCase.saUtr, testCase.taxYearRange, testCase.scenario.toString)
 
       val bearerToken = fetchBearerToken(testCase.bearerToken, testCase.saUtr)
 
       val allHeaders = HttpHeaders.allHeaders(bearerToken, "1.1")
       val response   =
-        new GetIndividualTax(allHeaders).getIndividualTaxResponse(testCase.saUtr, testCase.taxYearRange)
+        new GetNationalInsurance(allHeaders).getNationalInsuranceResponse(testCase.saUtr, testCase.taxYearRange)
 
       response.status shouldBe testCase.expectedStatusCode
 
       val jsonResponseData = response.data
-      val responseData     = jsonResponseData.as[IndividualTaxResponse]
+      val responseData     = jsonResponseData.as[NationalInsuranceResponse]
 
       testCase.scenario match {
-        case HAPPY_PATH_1 => responseData shouldBe minimumModel
-        case HAPPY_PATH_2 => responseData shouldBe maximumModel
+        case HAPPY_PATH_1 => responseData shouldBe firstNationalInsuranceResponse
+        case HAPPY_PATH_2 => responseData shouldBe secondNationalInsuranceResponse
         case s            =>
           fail(s"[${this.getClass.getSimpleName}][successTest] scenario $s does not match or exist")
       }
@@ -68,7 +54,7 @@ class IndividualTaxSpec extends BaseSpec {
 
   def errorTest(testCase: ErrorSaPrePopTestInput): Unit =
     s"return ${testCase.expectedStatusCode}:[${testCase.expectedResponseErrorCode}|${testCase.expectedResponseErrorMessage}] when calling individual-$serviceUnderTest with UTR: ${testCase.saUtr} and tax year: ${testCase.taxYearRange} and bearer: ${testCase.bearerToken.toString} for scenario: ${testCase.scenario}" in {
-      createTestUserData(testCase.saUtr, testCase.taxYearRange, testCase.scenario.toString, serviceUnderTest)
+      createNationalInsuranceTestUserData(testCase.saUtr, testCase.taxYearRange, testCase.scenario.toString)
 
       val bearerToken = fetchBearerToken(testCase.bearerToken, testCase.saUtr)
 
@@ -76,7 +62,7 @@ class IndividualTaxSpec extends BaseSpec {
         if (testCase.expectedStatusCode == 406) HttpHeaders.headersNoAccept(bearerToken)
         else HttpHeaders.allHeaders(bearerToken, "1.1")
       val response   =
-        new GetIndividualTax(allHeaders).getIndividualTaxResponse(testCase.saUtr, testCase.taxYearRange)
+        new GetNationalInsurance(allHeaders).getNationalInsuranceResponse(testCase.saUtr, testCase.taxYearRange)
 
       testCase.expectedStatusCode shouldBe response.status
 

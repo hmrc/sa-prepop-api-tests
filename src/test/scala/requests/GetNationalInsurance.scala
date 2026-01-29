@@ -20,15 +20,14 @@ import config.Configuration
 import http.HttpGetRequest
 import models.Response
 import play.api.libs.json.{JsValue, Json}
-import play.api.libs.ws.StandaloneWSResponse
 
-class GetIndividualEmployment(val headers: Seq[(String, String)]) extends HttpGetRequest {
+class GetNationalInsurance(val headers: Seq[(String, String)]) extends HttpGetRequest {
 
-  def getIndividualEmploymentResponse(utr: String, taxYear: String): Response = {
-    val url: String                    = s"${Configuration.settings.APP_EMPLOYMENT_ROOT}/sa/$utr/annual-summary/$taxYear"
-    val response: StandaloneWSResponse = executeRestCall(url)
-    val jsonResponse: String           = response.body
-    val data: JsValue                  = Json.parse(jsonResponse)
+  def getNationalInsuranceResponse(utr: String, taxYear: String): Response = {
+    val url                  = s"${Configuration.settings. APP_NATIONAL_INSURANCE_ROOT}/sa/$utr/annual-summary/$taxYear"
+    val response             = executeRestCall(url)
+    val jsonResponse: String = response.body
+    val data: JsValue        = Json.parse(jsonResponse)
 
     Response(response.status, data)
   }
