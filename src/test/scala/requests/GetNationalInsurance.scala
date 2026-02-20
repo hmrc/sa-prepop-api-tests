@@ -24,7 +24,7 @@ import play.api.libs.json.{JsValue, Json}
 class GetNationalInsurance(val headers: Seq[(String, String)]) extends HttpGetRequest {
 
   def getNationalInsuranceResponse(utr: String, taxYear: String): Response = {
-    val url                  = s"${Configuration.settings. APP_NATIONAL_INSURANCE_ROOT}/sa/$utr/annual-summary/$taxYear"
+    val url                  = s"${Configuration.settings.APP_NATIONAL_INSURANCE_ROOT}/sa/$utr/annual-summary/$taxYear"
     val response             = executeRestCall(url)
     val jsonResponse: String = response.body
     val data: JsValue        = Json.parse(jsonResponse)

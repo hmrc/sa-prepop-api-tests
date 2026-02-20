@@ -48,7 +48,7 @@ object LocalBearerGenerator extends HttpPostRequest {
          |    "providerId": "81448533810644543",
          |    "providerType": "GovernmentGateway"
          |  },
-         |  "confidenceLevel": 200,
+         |  "confidenceLevel": 250,
          |  "nino": "CK562300D",
          |  "usersName": "test",
          |  "credentialRole": "User",
