@@ -18,10 +18,11 @@ package models
 
 import play.api.libs.json.{Json, OFormat}
 
-case class HicbcResponse(
-  childBenefitEntitlement: BigDecimal
-)
+case class ChildBenefitEntitlementResponse(
+                                            childBenefitEntitlement: BigDecimal
+                                          )
 
-object HicbcResponse {
-  implicit val format: OFormat[HicbcResponse] = Json.format[HicbcResponse]
+object ChildBenefitEntitlementResponse {
+  implicit val format: OFormat[ChildBenefitEntitlementResponse] =
+    Json.format[ChildBenefitEntitlementResponse]
 }

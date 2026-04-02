@@ -18,24 +18,45 @@ package specs.benefits
 
 import http.HttpHeaders
 import models.*
-import models.Scenario.HAPPY_PATH_1
+import models.Scenario.{HAPPY_PATH_1, HAPPY_PATH_2}
 import requests.CreateTestUser.createTestUserData
 import requests.LocalBearerGenerator.fetchBearerToken
-import requests.{GetChildBenifitEntitlement, LocalBearerGenerator}
+import requests.GetChildBenefitEntitlement
 import specs.BaseSpec
 
-class ChildBenifitEntitlement extends BaseSpec {
+class ChildBenefitEntitlementSpec extends BaseSpec {
 
   override val serviceUnderTest: String = "child-benefit-entitlement"
 
-  val fullAmountModel: ChildBenifitEntitlementResponse =
-    ChildBenifitEntitlementResponse(childBenefitEntitlement = 450.99)
+  override val specificTestCases: Seq[BaseSaPrePopTestInput] = Seq(
+    ErrorSaPrePopTestInput(
+      saUtr = "1097172564",
+      taxYearRange = "2018-19",
+      expectedStatusCode = 404,
+      expectedResponseErrorCode = "NOT_FOUND",
+      expectedResponseErrorMessage = "Resource was not found",
+      bearerToken = BearerTokenType.Valid,
+      scenario = HAPPY_PATH_2
+    )
+  )
 
-  // val zeroAmountModel: ChildBenifitEntitlementResponse =
-  //  ChildBenifitEntitlementResponse(childBenefitEntitlement = 0.00)
+  override def allTestCases: Seq[BaseSaPrePopTestInput] =
+    specificTestCases ++ baseTestCases.filterNot {
+      case s: SuccessSaPrePopTestInput =>
+        s.taxYearRange == "2018-19" && s.scenario == HAPPY_PATH_2
+
+      case e: ErrorSaPrePopTestInput =>
+        e.expectedStatusCode == 406
+
+      case _ =>
+        false
+    }
+
+  val fullAmountModel: ChildBenefitEntitlementResponse =
+    ChildBenefitEntitlementResponse(childBenefitEntitlement = 450.99)
 
   def successTest(testCase: SuccessSaPrePopTestInput): Unit =
-    s"return ${testCase.expectedStatusCode} when calling ChildBenifitEntitlement with UTR: ${testCase.saUtr} and tax year: ${testCase.taxYearRange}" in {
+    s"should return ${testCase.expectedStatusCode} when calling child-benefit-entitlement with UTR: ${testCase.saUtr} and tax year: ${testCase.taxYearRange} and bearer: ${testCase.bearerToken} for scenario: ${testCase.scenario}" in {
 
       createTestUserData(
         testCase.saUtr,
@@ -45,29 +66,27 @@ class ChildBenifitEntitlement extends BaseSpec {
       )
 
       val bearerToken = fetchBearerToken(testCase.bearerToken, testCase.saUtr)
+      val headers     = HttpHeaders.allHeaders(bearerToken, "1.1")
 
-      val headers = HttpHeaders.allHeaders(bearerToken, "1.1")
-
-      val response = new GetChildBenifitEntitlement(headers)
-        .getChildBenifitEntitlementResponse(testCase.saUtr, testCase.taxYearRange)
+      val response = new GetChildBenefitEntitlement(headers)
+        .getChildBenefitEntitlementResponse(testCase.saUtr, testCase.taxYearRange)
 
       response.status shouldBe testCase.expectedStatusCode
 
-      val responseData = response.data.as[ChildBenifitEntitlementResponse]
+      val responseData = response.data.as[ChildBenefitEntitlementResponse]
 
       testCase.scenario match {
         case HAPPY_PATH_1 => responseData shouldBe fullAmountModel
-        //  case HAPPY_PATH_2 => responseData shouldBe zeroAmountModel
-        case s            =>
-          fail(s"[${this.getClass.getSimpleName}][successTest] scenario $s does not match or exist")
+        case s            => fail(s"[ChildBenefitEntitlementSpec] Unexpected success scenario $s")
       }
     }
 
   def errorTest(testCase: ErrorSaPrePopTestInput): Unit =
-    s"return ${testCase.expectedStatusCode} when calling ChildBenifitEntitlement with UTR: ${testCase.saUtr} and tax year: ${testCase.taxYearRange} and bearer: ${testCase.bearerToken} for scenario: ${testCase.scenario}" in {
+    s"should return ${testCase.expectedStatusCode} when calling child-benefit-entitlement with UTR: ${testCase.saUtr} and tax year: ${testCase.taxYearRange} and bearer: ${testCase.bearerToken} for scenario: ${testCase.scenario}" in {
 
-      // Only prime stub for VALID inputs
-      if (testCase.expectedStatusCode != 400 || !testCase.taxYearRange.contains("19")) {
+      val isValidTaxYear = testCase.taxYearRange.matches("\\d{4}-\\d{2}")
+
+      if (isValidTaxYear) {
         createTestUserData(
           testCase.saUtr,
           testCase.taxYearRange,
@@ -75,30 +94,26 @@ class ChildBenifitEntitlement extends BaseSpec {
           serviceUnderTest
         )
       }
-      )
 
       val bearerToken = fetchBearerToken(testCase.bearerToken, testCase.saUtr)
 
       val headers =
-        if (testCase.expectedStatusCode == 406)
-          HttpHeaders.headersNoAccept(bearerToken)
-        else
-          HttpHeaders.allHeaders(bearerToken, "1.1")
+        if (testCase.expectedStatusCode == 406) HttpHeaders.headersNoAccept(bearerToken)
+        else HttpHeaders.allHeaders(bearerToken, "1.1")
 
-      val response = new GetChildBenifitEntitlement(headers)
-        .getChildBenifitEntitlementResponse(testCase.saUtr, testCase.taxYearRange)
+      val response = new GetChildBenefitEntitlement(headers)
+        .getChildBenefitEntitlementResponse(testCase.saUtr, testCase.taxYearRange)
 
       response.status shouldBe testCase.expectedStatusCode
 
       val error = response.data.as[JsonErrorResponse]
 
-      error.code    shouldBe testCase.expectedResponseErrorCode
+      error.code shouldBe testCase.expectedResponseErrorCode
       error.message shouldBe testCase.expectedResponseErrorMessage
     }
 
   s"${this.getClass.getSimpleName}" when
     allTestCases.foreach {
-
       case successCase: SuccessSaPrePopTestInput =>
         "making successful requests" should
           successTest(successCase)

@@ -22,14 +22,16 @@ import models.Response
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.StandaloneWSResponse
 
-class GetChildBenifitEntitlement(val headers: Seq[(String, String)]) extends HttpGetRequest {
+class GetChildBenefitEntitlement(val headers: Seq[(String, String)]) extends HttpGetRequest {
 
-  def getHicbcResponse(utr: String, taxYear: String): Response = {
-    val url: String                    =
-      s"${Configuration.settings.APP_BENEFITS_ROOT}/self-assessment-prepop/individual/$utr/child-benefit-entitlement/tax-year/$taxYear"
+  def getChildBenefitEntitlementResponse(utr: String, taxYear: String): Response = {
+
+    val url =
+      s"${Configuration.settings.APP_BENEFITS_ROOT}/sa/$utr/child-benefit-entitlement/annual-summary/$taxYear"
+
     val response: StandaloneWSResponse = executeRestCall(url)
-    val jsonResponse: String           = response.body
-    val data: JsValue                  = Json.parse(jsonResponse)
+
+    val data: JsValue = Json.parse(response.body)
 
     Response(response.status, data)
   }
