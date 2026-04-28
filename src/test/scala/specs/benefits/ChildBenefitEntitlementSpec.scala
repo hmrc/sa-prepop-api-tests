@@ -19,7 +19,7 @@ package specs.benefits
 import http.HttpHeaders
 import models.*
 import models.Scenario.{HAPPY_PATH_1, HAPPY_PATH_2}
-import requests.CreateTestUser.createTestUserData
+import requests.CreateTestUserChildBenefitEntitlement.createTestUserData
 import requests.LocalBearerGenerator.fetchBearerToken
 import requests.GetChildBenefitEntitlement
 import specs.BaseSpec
@@ -99,7 +99,7 @@ class ChildBenefitEntitlementSpec extends BaseSpec {
 
       val headers =
         if (testCase.expectedStatusCode == 406) HttpHeaders.headersNoAccept(bearerToken)
-        else HttpHeaders.allHeaders(bearerToken, "1.1")
+        else HttpHeaders.allHeaders(bearerToken, "2.0")
 
       val response = new GetChildBenefitEntitlement(headers)
         .getChildBenefitEntitlementResponse(testCase.saUtr, testCase.taxYearRange)
@@ -108,7 +108,7 @@ class ChildBenefitEntitlementSpec extends BaseSpec {
 
       val error = response.data.as[JsonErrorResponse]
 
-      error.code shouldBe testCase.expectedResponseErrorCode
+      error.code    shouldBe testCase.expectedResponseErrorCode
       error.message shouldBe testCase.expectedResponseErrorMessage
     }
 
