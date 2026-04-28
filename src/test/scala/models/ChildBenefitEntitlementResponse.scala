@@ -19,8 +19,8 @@ package models
 import play.api.libs.json.{Json, OFormat}
 
 case class ChildBenefitEntitlementResponse(
-                                            childBenefitEntitlement: BigDecimal
-                                          )
+  childBenefitEntitlement: BigDecimal
+)
 
 object ChildBenefitEntitlementResponse {
   implicit val format: OFormat[ChildBenefitEntitlementResponse] =
