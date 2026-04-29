@@ -22,7 +22,7 @@ import http.HttpPostRequest
 object CreateTestUserChildBenefitEntitlement extends HttpPostRequest {
 
   override def headers: Seq[(String, String)] = Seq(
-    ("Accept", "application/vnd.hmrc.2.0+json"),
+    ("Accept", "application/vnd.hmrc.1.2+json"),
     ("Content-Type", "application/json")
   )
 
