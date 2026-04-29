@@ -66,7 +66,7 @@ class ChildBenefitEntitlementSpec extends BaseSpec {
       )
 
       val bearerToken = fetchBearerToken(testCase.bearerToken, testCase.saUtr)
-      val headers     = HttpHeaders.allHeaders(bearerToken, "1.2")
+      val headers     = HttpHeaders.allHeaders(bearerToken, "2.0")
 
       val response = new GetChildBenefitEntitlement(headers)
         .getChildBenefitEntitlementResponse(testCase.saUtr, testCase.taxYearRange)
@@ -99,7 +99,7 @@ class ChildBenefitEntitlementSpec extends BaseSpec {
 
       val headers =
         if (testCase.expectedStatusCode == 406) HttpHeaders.headersNoAccept(bearerToken)
-        else HttpHeaders.allHeaders(bearerToken, "1.2")
+        else HttpHeaders.allHeaders(bearerToken, "2.0")
 
       val response = new GetChildBenefitEntitlement(headers)
         .getChildBenefitEntitlementResponse(testCase.saUtr, testCase.taxYearRange)
