@@ -57,7 +57,13 @@ class IndividualEmploymentSpec extends BaseSpec {
 
   def successTest(testCase: SuccessSaPrePopTestInput): Unit =
     s"return ${testCase.expectedStatusCode} when calling individual-$serviceUnderTest with UTR: ${testCase.saUtr} and tax year: ${testCase.taxYearRange} and bearer: ${testCase.bearerToken.toString} for scenario: ${testCase.scenario}" in {
-      createTestUserData(testCase.saUtr, testCase.taxYearRange, testCase.scenario.toString, serviceUnderTest)
+
+      createTestUserData(
+        testCase.saUtr,
+        testCase.taxYearRange,
+        testCase.scenario.toString,
+        serviceUnderTest
+      ) shouldBe 201
 
       val bearerToken = fetchBearerToken(testCase.bearerToken, testCase.saUtr)
 
@@ -80,7 +86,6 @@ class IndividualEmploymentSpec extends BaseSpec {
 
   def errorTest(testCase: ErrorSaPrePopTestInput): Unit =
     s"return ${testCase.expectedStatusCode}:[${testCase.expectedResponseErrorCode}|${testCase.expectedResponseErrorMessage}] when calling individual-$serviceUnderTest with UTR: ${testCase.saUtr} and tax year: ${testCase.taxYearRange} and bearer: ${testCase.bearerToken.toString} for scenario: ${testCase.scenario}" in {
-      createTestUserData(testCase.saUtr, testCase.taxYearRange, testCase.scenario.toString, serviceUnderTest)
 
       val bearerToken = fetchBearerToken(testCase.bearerToken, testCase.saUtr)
 

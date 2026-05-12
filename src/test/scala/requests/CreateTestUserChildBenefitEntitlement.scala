@@ -34,14 +34,4 @@ object CreateTestUserChildBenefitEntitlement extends HttpPostRequest {
 
     executeRestWithBodyCall(url, body).status
   }
-
-  def createNationalInsuranceTestUserData(utr: String, taxYear: String, scenario: String): Int = {
-    val url  = s"${Configuration.settings.STUB_NATIONAL_INSURANCE_ROOT}/sa/$utr/annual-summary/$taxYear"
-    val body = s"""{
-                  |"scenario": "$scenario"
-                  |}""".stripMargin
-
-    executeRestWithBodyCall(url, body).status
-  }
-
 }
