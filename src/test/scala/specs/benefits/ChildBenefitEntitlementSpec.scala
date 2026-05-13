@@ -63,7 +63,7 @@ class ChildBenefitEntitlementSpec extends BaseSpec {
         testCase.taxYearRange,
         testCase.scenario.toString,
         serviceUnderTest
-      )
+      ) shouldBe 201
 
       val bearerToken = fetchBearerToken(testCase.bearerToken, testCase.saUtr)
       val headers     = HttpHeaders.allHeaders(bearerToken, "2.0")
@@ -83,17 +83,6 @@ class ChildBenefitEntitlementSpec extends BaseSpec {
 
   def errorTest(testCase: ErrorSaPrePopTestInput): Unit =
     s"should return ${testCase.expectedStatusCode} when calling child-benefit-entitlement with UTR: ${testCase.saUtr} and tax year: ${testCase.taxYearRange} and bearer: ${testCase.bearerToken} for scenario: ${testCase.scenario}" in {
-
-      val isValidTaxYear = testCase.taxYearRange.matches("\\d{4}-\\d{2}")
-
-      if (isValidTaxYear) {
-        createTestUserData(
-          testCase.saUtr,
-          testCase.taxYearRange,
-          testCase.scenario.toString,
-          serviceUnderTest
-        )
-      }
 
       val bearerToken = fetchBearerToken(testCase.bearerToken, testCase.saUtr)
 

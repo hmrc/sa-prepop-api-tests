@@ -40,15 +40,15 @@ trait BaseSpec extends AnyWordSpec with Matchers with BeforeAndAfterAll with Bef
       bearerToken = BearerTokenType.Valid,
       scenario = HAPPY_PATH_2
     ),
-//    ErrorSaPrePopTestInput(
-//      saUtr = "109717256-",
-//      taxYearRange = "2017-18",
-//      expectedStatusCode = 400,
-//      expectedResponseErrorCode = "SA_UTR_INVALID",
-//      expectedResponseErrorMessage = "The provided SA UTR is invalid",
-//      bearerToken = BearerTokenType.Valid,
-//      scenario = HAPPY_PATH_1
-//    ),
+    ErrorSaPrePopTestInput(
+      saUtr = "109717256-",
+      taxYearRange = "2017-18",
+      expectedStatusCode = 400,
+      expectedResponseErrorCode = "SA_UTR_INVALID",
+      expectedResponseErrorMessage = "The provided SA UTR is invalid",
+      bearerToken = BearerTokenType.Valid,
+      scenario = HAPPY_PATH_1
+    ),
     ErrorSaPrePopTestInput(
       saUtr = "",
       taxYearRange = "2017-18",

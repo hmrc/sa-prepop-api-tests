@@ -43,5 +43,4 @@ object CreateTestUser extends HttpPostRequest {
 
     executeRestWithBodyCall(url, body).status
   }
-
 }

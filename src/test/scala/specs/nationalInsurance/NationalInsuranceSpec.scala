@@ -31,7 +31,12 @@ class NationalInsuranceSpec extends BaseSpec {
 
   def successTest(testCase: SuccessSaPrePopTestInput): Unit =
     s"return ${testCase.expectedStatusCode} when calling national-$serviceUnderTest with UTR: ${testCase.saUtr} and tax year: ${testCase.taxYearRange} and bearer: ${testCase.bearerToken.toString} for scenario: ${testCase.scenario}" in {
-      createNationalInsuranceTestUserData(testCase.saUtr, testCase.taxYearRange, testCase.scenario.toString)
+
+      createNationalInsuranceTestUserData(
+        testCase.saUtr,
+        testCase.taxYearRange,
+        testCase.scenario.toString
+      ) shouldBe 201
 
       val bearerToken = fetchBearerToken(testCase.bearerToken, testCase.saUtr)
 
@@ -54,7 +59,6 @@ class NationalInsuranceSpec extends BaseSpec {
 
   def errorTest(testCase: ErrorSaPrePopTestInput): Unit =
     s"return ${testCase.expectedStatusCode}:[${testCase.expectedResponseErrorCode}|${testCase.expectedResponseErrorMessage}] when calling individual-$serviceUnderTest with UTR: ${testCase.saUtr} and tax year: ${testCase.taxYearRange} and bearer: ${testCase.bearerToken.toString} for scenario: ${testCase.scenario}" in {
-      createNationalInsuranceTestUserData(testCase.saUtr, testCase.taxYearRange, testCase.scenario.toString)
 
       val bearerToken = fetchBearerToken(testCase.bearerToken, testCase.saUtr)
 
