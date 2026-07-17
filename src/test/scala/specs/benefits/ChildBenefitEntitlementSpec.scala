@@ -47,9 +47,6 @@ class ChildBenefitEntitlementSpec extends BaseSpec {
 
       case e: ErrorSaPrePopTestInput =>
         e.expectedStatusCode == 406
-
-      case _ =>
-        false
     }
 
   val fullAmountModel: ChildBenefitEntitlementResponse =
