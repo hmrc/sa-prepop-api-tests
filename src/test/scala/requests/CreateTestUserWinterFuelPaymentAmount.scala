@@ -17,21 +17,22 @@
 package requests
 
 import config.Configuration
-import http.HttpGetRequest
-import models.Response
-import play.api.libs.json.{JsValue, Json}
-import play.api.libs.ws.StandaloneWSResponse
+import http.HttpPostRequest
 
-class GetChildBenefitEntitlement(val headers: Seq[(String, String)]) extends HttpGetRequest {
+object CreateTestUserWinterFuelPaymentAmount extends HttpPostRequest {
 
-  def getChildBenefitEntitlementResponse(utr: String, taxYear: String): Response = {
+  override def headers: Seq[(String, String)] = Seq(
+    ("Accept", "application/vnd.hmrc.2.1+json"),
+    ("Content-Type", "application/json")
+  )
 
-    val url =
-      s"${Configuration.settings.APP_BENEFITS_ROOT}/sa/$utr/child-benefit-entitlement/annual-summary/$taxYear"
+  def createTestUserData(nino: String, taxYear: String, scenario: String, urlPath: String): Int = {
+    val url  = s"${Configuration.settings.STUB_ROOT}/$nino/$urlPath/annual-summary/$taxYear"
+    val body =
+      s"""{
+         |"scenario": "$scenario"
+         |}""".stripMargin
 
-    val response: StandaloneWSResponse = executeRestCall(url)
-    val data: JsValue                  = Json.parse(response.body)
-
-    Response(response.status, data)
+    executeRestWithBodyCall(url, body).status
   }
 }

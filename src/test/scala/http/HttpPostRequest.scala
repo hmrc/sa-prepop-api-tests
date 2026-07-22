@@ -30,14 +30,11 @@ trait HttpPostRequest extends HttpRequest {
         .withHttpHeaders(headers: _*)
         .post(body)
     )
-
     printResponse(response)
-
     response
   }
 
   override def executeRestCall(url: String): StandaloneWSResponse = throw new UnsupportedOperationException(
     "Not supported"
   )
-
 }

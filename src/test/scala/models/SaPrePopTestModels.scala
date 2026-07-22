@@ -41,3 +41,32 @@ case class ErrorSaPrePopTestInput(
   expectedResponseErrorCode: String,
   expectedResponseErrorMessage: String
 ) extends BaseSaPrePopTestInput
+
+sealed trait BaseSaPrePopTestInputWithNino {
+  def nino: String
+  def saUtr: String
+  def taxYearRange: String
+  def bearerToken: BearerTokenType
+  def scenario: Scenario
+  def expectedStatusCode: Int
+}
+
+case class SuccessSaPrePopTestInputWithNino(
+  nino: String,
+  saUtr: String,
+  taxYearRange: String,
+  bearerToken: BearerTokenType,
+  scenario: Scenario,
+  expectedStatusCode: Int
+) extends BaseSaPrePopTestInputWithNino
+
+case class ErrorSaPrePopTestInputWithNino(
+  nino: String,
+  saUtr: String,
+  taxYearRange: String,
+  bearerToken: BearerTokenType,
+  scenario: Scenario,
+  expectedStatusCode: Int,
+  expectedResponseErrorCode: String,
+  expectedResponseErrorMessage: String
+) extends BaseSaPrePopTestInputWithNino
