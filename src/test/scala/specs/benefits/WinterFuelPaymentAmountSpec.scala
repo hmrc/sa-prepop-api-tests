@@ -28,9 +28,9 @@ class WinterFuelPaymentAmountSpec extends BaseSpec {
 
   override val serviceUnderTest: String = "winter-fuel-payment-amount"
 
-  override val specificTestCasesWithNino: Seq[BaseSaPrePopTestInputWithNino] = Seq(
-    ErrorSaPrePopTestInputWithNino(
-      nino = "AA123456A",
+  override val specificTestCases: Seq[BaseSaPrePopTestInput] = Seq(
+    ErrorSaPrePopTestInput(
+      nino = "CE123457D",
       saUtr = "1097172564",
       taxYearRange = "2018-19",
       expectedStatusCode = 404,
@@ -41,20 +41,20 @@ class WinterFuelPaymentAmountSpec extends BaseSpec {
     )
   )
 
-  override def allTestCasesWithNino: Seq[BaseSaPrePopTestInputWithNino] =
-    specificTestCasesWithNino ++ baseTestCasesWithNino.filterNot {
-      case s: SuccessSaPrePopTestInputWithNino =>
+  override def allTestCases: Seq[BaseSaPrePopTestInput] =
+    specificTestCases ++ baseTestCases.filterNot {
+      case s: SuccessSaPrePopTestInput =>
         s.taxYearRange == "2018-19" && s.scenario == HAPPY_PATH_2
 
-      case e: ErrorSaPrePopTestInputWithNino =>
+      case e: ErrorSaPrePopTestInput =>
         e.expectedStatusCode == 406
     }
 
   val fullAmountModel: WinterFuelPaymentAmountResponse =
     WinterFuelPaymentAmountResponse(winterFuelPaymentAmount = 215.67)
 
-  def successTest(testCase: SuccessSaPrePopTestInputWithNino): Unit =
-    s"should return ${testCase.expectedStatusCode} when calling winter-fuel-payment-amount with nino: ${testCase.nino} and tax year: ${testCase.taxYearRange} and bearer: ${testCase.bearerToken} for scenario: ${testCase.scenario}" in {
+  def successTest(testCase: SuccessSaPrePopTestInput): Unit =
+    s"should return ${testCase.expectedStatusCode} when calling winter-fuel-payment-amount with utr: ${testCase.saUtr} and tax year: ${testCase.taxYearRange} and bearer: ${testCase.bearerToken} for scenario: ${testCase.scenario}" in {
 
       createTestUserData(
         testCase.nino,
@@ -67,12 +67,12 @@ class WinterFuelPaymentAmountSpec extends BaseSpec {
       val headers     = HttpHeaders.allHeaders(bearerToken, "2.1")
       val client      = new GetWinterFuelPaymentAmount(headers)
 
-      val response3rdParties = client.getWinterFuelPaymentAmountResponse(testCase.nino, testCase.taxYearRange)
+      val response3rdParties = client.getWinterFuelPaymentAmountResponse(testCase.saUtr, testCase.taxYearRange)
       response3rdParties.status shouldBe testCase.expectedStatusCode
 
       val responseData3rdParties = response3rdParties.data.as[WinterFuelPaymentAmountResponse]
 
-      val responseOTRSA = client.getWinterFuelPaymentAmountResponseOTRSA(testCase.nino, testCase.taxYearRange)
+      val responseOTRSA = client.getWinterFuelPaymentAmountResponseOTRSA(testCase.saUtr, testCase.taxYearRange)
       responseOTRSA.status shouldBe testCase.expectedStatusCode
 
       val responseDataOTRSA = responseOTRSA.data.as[WinterFuelPaymentAmountResponse]
@@ -86,8 +86,8 @@ class WinterFuelPaymentAmountSpec extends BaseSpec {
         case s            => fail(s"[WinterFuelPaymentAmountSpec] Unexpected success scenario $s")
       }
     }
-  def errorTest(testCase: ErrorSaPrePopTestInputWithNino): Unit     =
-    s"should return ${testCase.expectedStatusCode} when calling winter-fuel-payment-amount with nino: ${testCase.nino} and tax year: ${testCase.taxYearRange} and bearer: ${testCase.bearerToken} for scenario: ${testCase.scenario}" in {
+  def errorTest(testCase: ErrorSaPrePopTestInput): Unit     =
+    s"should return ${testCase.expectedStatusCode} when calling winter-fuel-payment-amount with utr: ${testCase.saUtr} and tax year: ${testCase.taxYearRange} and bearer: ${testCase.bearerToken} for scenario: ${testCase.scenario}" in {
 
       val bearerToken = fetchBearerToken(testCase.bearerToken, testCase.saUtr)
       val headers     =
@@ -96,7 +96,7 @@ class WinterFuelPaymentAmountSpec extends BaseSpec {
 
       val client = new GetWinterFuelPaymentAmount(headers)
 
-      val response3rdParties = client.getWinterFuelPaymentAmountResponse(testCase.nino, testCase.taxYearRange)
+      val response3rdParties = client.getWinterFuelPaymentAmountResponse(testCase.saUtr, testCase.taxYearRange)
       response3rdParties.status shouldBe testCase.expectedStatusCode
 
       val error3rdParties = response3rdParties.data.as[JsonErrorResponse]
@@ -104,7 +104,7 @@ class WinterFuelPaymentAmountSpec extends BaseSpec {
       error3rdParties.code    shouldBe testCase.expectedResponseErrorCode
       error3rdParties.message shouldBe testCase.expectedResponseErrorMessage
 
-      val responseOTRSA = client.getWinterFuelPaymentAmountResponseOTRSA(testCase.nino, testCase.taxYearRange)
+      val responseOTRSA = client.getWinterFuelPaymentAmountResponseOTRSA(testCase.saUtr, testCase.taxYearRange)
       responseOTRSA.status shouldBe testCase.expectedStatusCode
 
       val errorOTRSA = responseOTRSA.data.as[JsonErrorResponse]
@@ -114,12 +114,12 @@ class WinterFuelPaymentAmountSpec extends BaseSpec {
     }
 
   s"${this.getClass.getSimpleName}" when
-    allTestCasesWithNino.foreach {
-      case successCase: SuccessSaPrePopTestInputWithNino =>
+    allTestCases.foreach {
+      case successCase: SuccessSaPrePopTestInput =>
         "making successful requests" should
           successTest(successCase)
 
-      case errorCase: ErrorSaPrePopTestInputWithNino =>
+      case errorCase: ErrorSaPrePopTestInput =>
         "making error requests" should
           errorTest(errorCase)
     }

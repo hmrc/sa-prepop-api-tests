@@ -24,10 +24,10 @@ import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach}
 
 trait BaseSpec extends AnyWordSpec with Matchers with BeforeAndAfterAll with BeforeAndAfterEach {
 
-  val specificTestCases: Seq[BaseSaPrePopTestInput]                 = Seq.empty
-  val specificTestCasesWithNino: Seq[BaseSaPrePopTestInputWithNino] = Seq.empty
-  val baseTestCases: Seq[BaseSaPrePopTestInput]                     = Seq(
+  val specificTestCases: Seq[BaseSaPrePopTestInput] = Seq.empty
+  val baseTestCases: Seq[BaseSaPrePopTestInput]     = Seq(
     SuccessSaPrePopTestInput(
+      nino = "CE123457D",
       saUtr = "1097172564",
       taxYearRange = "2017-18",
       expectedStatusCode = 200,
@@ -35,6 +35,7 @@ trait BaseSpec extends AnyWordSpec with Matchers with BeforeAndAfterAll with Bef
       scenario = HAPPY_PATH_1
     ),
     SuccessSaPrePopTestInput(
+      nino = "CE123457D",
       saUtr = "1097172564",
       taxYearRange = "2018-19",
       expectedStatusCode = 200,
@@ -42,6 +43,7 @@ trait BaseSpec extends AnyWordSpec with Matchers with BeforeAndAfterAll with Bef
       scenario = HAPPY_PATH_2
     ),
     ErrorSaPrePopTestInput(
+      nino = "CE123457D",
       saUtr = "109717256-",
       taxYearRange = "2017-18",
       expectedStatusCode = 400,
@@ -51,6 +53,7 @@ trait BaseSpec extends AnyWordSpec with Matchers with BeforeAndAfterAll with Bef
       scenario = HAPPY_PATH_1
     ),
     ErrorSaPrePopTestInput(
+      nino = "CE123457D",
       saUtr = "",
       taxYearRange = "2017-18",
       expectedStatusCode = 404,
@@ -60,6 +63,7 @@ trait BaseSpec extends AnyWordSpec with Matchers with BeforeAndAfterAll with Bef
       scenario = HAPPY_PATH_1
     ),
     ErrorSaPrePopTestInput(
+      nino = "CE123457D",
       saUtr = "1097172564",
       taxYearRange = "2017-19",
       expectedStatusCode = 400,
@@ -69,6 +73,7 @@ trait BaseSpec extends AnyWordSpec with Matchers with BeforeAndAfterAll with Bef
       scenario = HAPPY_PATH_1
     ),
     ErrorSaPrePopTestInput(
+      nino = "CE123457D",
       saUtr = "1097172564",
       taxYearRange = "2017-18",
       expectedStatusCode = 401,
@@ -78,6 +83,7 @@ trait BaseSpec extends AnyWordSpec with Matchers with BeforeAndAfterAll with Bef
       scenario = HAPPY_PATH_1
     ),
     ErrorSaPrePopTestInput(
+      nino = "CE123457D",
       saUtr = "1097172564",
       taxYearRange = "2017-18",
       expectedStatusCode = 401,
@@ -87,6 +93,7 @@ trait BaseSpec extends AnyWordSpec with Matchers with BeforeAndAfterAll with Bef
       scenario = HAPPY_PATH_1
     ),
     ErrorSaPrePopTestInput(
+      nino = "CE123457D",
       saUtr = "1097172564",
       taxYearRange = "2017-18",
       expectedStatusCode = 406,
@@ -96,6 +103,7 @@ trait BaseSpec extends AnyWordSpec with Matchers with BeforeAndAfterAll with Bef
       scenario = HAPPY_PATH_1
     ),
     ErrorSaPrePopTestInput(
+      nino = "CE123457D",
       saUtr = "1097172564",
       taxYearRange = "2017-18",
       expectedStatusCode = 401,
@@ -109,95 +117,4 @@ trait BaseSpec extends AnyWordSpec with Matchers with BeforeAndAfterAll with Bef
   def serviceUnderTest: String
 
   def allTestCases: Seq[BaseSaPrePopTestInput] = specificTestCases ++ baseTestCases
-
-  def allTestCasesWithNino: Seq[BaseSaPrePopTestInputWithNino] = specificTestCasesWithNino ++ baseTestCasesWithNino
-
-  val baseTestCasesWithNino: Seq[BaseSaPrePopTestInputWithNino] = Seq(
-    SuccessSaPrePopTestInputWithNino(
-      nino = "CE123457D",
-      saUtr = "1097172564",
-      taxYearRange = "2017-18",
-      expectedStatusCode = 200,
-      bearerToken = BearerTokenType.Valid,
-      scenario = HAPPY_PATH_1
-    ),
-    SuccessSaPrePopTestInputWithNino(
-      nino = "CE123457D",
-      saUtr = "1097172564",
-      taxYearRange = "2018-19",
-      expectedStatusCode = 200,
-      bearerToken = BearerTokenType.Valid,
-      scenario = HAPPY_PATH_2
-    ),
-    ErrorSaPrePopTestInputWithNino(
-      nino = "AA123456-",
-      saUtr = "1097172564",
-      taxYearRange = "2017-18",
-      expectedStatusCode = 400,
-      expectedResponseErrorCode = "NINO_INVALID",
-      expectedResponseErrorMessage = "The provided NINO is invalid",
-      bearerToken = BearerTokenType.Valid,
-      scenario = HAPPY_PATH_1
-    ),
-    ErrorSaPrePopTestInputWithNino(
-      nino = "",
-      saUtr = "1097172564",
-      taxYearRange = "2017-18",
-      expectedStatusCode = 404,
-      expectedResponseErrorCode = "NOT_FOUND",
-      expectedResponseErrorMessage = "Resource was not found",
-      bearerToken = BearerTokenType.Valid,
-      scenario = HAPPY_PATH_1
-    ),
-    ErrorSaPrePopTestInputWithNino(
-      nino = "CE123457D",
-      saUtr = "1097172564",
-      taxYearRange = "2017-19",
-      expectedStatusCode = 400,
-      expectedResponseErrorCode = "TAX_YEAR_INVALID",
-      expectedResponseErrorMessage = "The provided Tax Year is invalid",
-      bearerToken = BearerTokenType.Valid,
-      scenario = HAPPY_PATH_1
-    ),
-    ErrorSaPrePopTestInputWithNino(
-      nino = "CE123457D",
-      saUtr = "1097172564",
-      taxYearRange = "2017-18",
-      expectedStatusCode = 401,
-      expectedResponseErrorCode = "UNAUTHORIZED",
-      expectedResponseErrorMessage = "Bearer token is missing or not authorized",
-      bearerToken = BearerTokenType.Missing,
-      scenario = HAPPY_PATH_1
-    ),
-    ErrorSaPrePopTestInputWithNino(
-      nino = "CE123457D",
-      saUtr = "1097172564",
-      taxYearRange = "2017-18",
-      expectedStatusCode = 401,
-      expectedResponseErrorCode = "UNAUTHORIZED",
-      expectedResponseErrorMessage = "Bearer token is missing or not authorized",
-      bearerToken = BearerTokenType.Invalid,
-      scenario = HAPPY_PATH_1
-    ),
-    ErrorSaPrePopTestInputWithNino(
-      nino = "CE123457D",
-      saUtr = "1097172564",
-      taxYearRange = "2017-18",
-      expectedStatusCode = 406,
-      expectedResponseErrorCode = "ACCEPT_HEADER_INVALID",
-      expectedResponseErrorMessage = "The accept header is missing or invalid",
-      bearerToken = BearerTokenType.Valid,
-      scenario = HAPPY_PATH_1
-    ),
-    ErrorSaPrePopTestInputWithNino(
-      nino = "AA000002B",
-      saUtr = "1097122222",
-      taxYearRange = "2017-18",
-      expectedStatusCode = 401,
-      expectedResponseErrorCode = "UNAUTHORIZED",
-      expectedResponseErrorMessage = "Bearer token is missing or not authorized",
-      bearerToken = BearerTokenType.WrongSaUtr,
-      scenario = HAPPY_PATH_1
-    )
-  )
 }

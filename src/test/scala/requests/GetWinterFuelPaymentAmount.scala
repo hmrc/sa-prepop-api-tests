@@ -24,10 +24,10 @@ import play.api.libs.ws.StandaloneWSResponse
 
 class GetWinterFuelPaymentAmount(val headers: Seq[(String, String)]) extends HttpGetRequest {
 
-  def getWinterFuelPaymentAmountResponse(nino: String, taxYear: String): Response = {
+  def getWinterFuelPaymentAmountResponse(utr: String, taxYear: String): Response = {
 
     val url =
-      s"${Configuration.settings.APP_BENEFITS_ROOT}/$nino/winter-fuel-payment-amount/annual-summary/$taxYear"
+      s"${Configuration.settings.APP_BENEFITS_ROOT}/sa/$utr/winter-fuel-payment-amount/annual-summary/$taxYear"
 
     val response: StandaloneWSResponse = executeRestCall(url)
     val data: JsValue                  = Json.parse(response.body)
@@ -35,10 +35,10 @@ class GetWinterFuelPaymentAmount(val headers: Seq[(String, String)]) extends Htt
     Response(response.status, data)
   }
 
-  def getWinterFuelPaymentAmountResponseOTRSA(nino: String, taxYear: String): Response = {
+  def getWinterFuelPaymentAmountResponseOTRSA(utr: String, taxYear: String): Response = {
 
     val url =
-      s"${Configuration.settings.APP_BENEFITS_ROOT}/otrsa/$nino/winter-fuel-payment-amount/annual-summary/$taxYear"
+      s"${Configuration.settings.APP_BENEFITS_ROOT}/otrsa/$utr/winter-fuel-payment-amount/annual-summary/$taxYear"
 
     val response: StandaloneWSResponse = executeRestCall(url)
     val data: JsValue                  = Json.parse(response.body)
