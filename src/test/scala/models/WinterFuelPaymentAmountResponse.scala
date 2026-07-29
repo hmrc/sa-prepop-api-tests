@@ -14,25 +14,15 @@
  * limitations under the License.
  */
 
-package http
+package models
 
-import play.api.libs.ws.StandaloneWSResponse
+import play.api.libs.json.{Json, OFormat}
 
-trait HttpGetRequest extends HttpRequest {
+case class WinterFuelPaymentAmountResponse(
+  winterFuelPaymentAmount: BigDecimal
+)
 
-  override def executeRestCall(url: String): StandaloneWSResponse = {
-    logger.info(s"Executing GET request, on url=$url")
-
-    val response = await(
-      HttpClient
-        .createRequest(url)
-        .withHttpHeaders(headers: _*)
-        .get()
-    )
-    printResponse(response)
-    response
-  }
-
-  override def executeRestWithBodyCall(url: String, body: String): StandaloneWSResponse =
-    throw new UnsupportedOperationException("Not supported")
+object WinterFuelPaymentAmountResponse {
+  implicit val format: OFormat[WinterFuelPaymentAmountResponse] =
+    Json.format[WinterFuelPaymentAmountResponse]
 }

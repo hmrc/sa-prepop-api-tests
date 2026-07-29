@@ -30,6 +30,7 @@ class ChildBenefitEntitlementSpec extends BaseSpec {
 
   override val specificTestCases: Seq[BaseSaPrePopTestInput] = Seq(
     ErrorSaPrePopTestInput(
+      nino = "CE123457D",
       saUtr = "1097172564",
       taxYearRange = "2018-19",
       expectedStatusCode = 404,

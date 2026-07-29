@@ -17,6 +17,7 @@
 package models
 
 sealed trait BaseSaPrePopTestInput {
+  def nino: String
   def saUtr: String
   def taxYearRange: String
   def bearerToken: BearerTokenType
@@ -25,6 +26,7 @@ sealed trait BaseSaPrePopTestInput {
 }
 
 case class SuccessSaPrePopTestInput(
+  nino: String,
   saUtr: String,
   taxYearRange: String,
   bearerToken: BearerTokenType,
@@ -33,6 +35,7 @@ case class SuccessSaPrePopTestInput(
 ) extends BaseSaPrePopTestInput
 
 case class ErrorSaPrePopTestInput(
+  nino: String,
   saUtr: String,
   taxYearRange: String,
   bearerToken: BearerTokenType,

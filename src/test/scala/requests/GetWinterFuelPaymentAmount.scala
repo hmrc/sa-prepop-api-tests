@@ -22,16 +22,28 @@ import models.Response
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.StandaloneWSResponse
 
-class GetChildBenefitEntitlement(val headers: Seq[(String, String)]) extends HttpGetRequest {
+class GetWinterFuelPaymentAmount(val headers: Seq[(String, String)]) extends HttpGetRequest {
 
-  def getChildBenefitEntitlementResponse(utr: String, taxYear: String): Response = {
+  def getWinterFuelPaymentAmountResponse(utr: String, taxYear: String): Response = {
 
     val url =
-      s"${Configuration.settings.APP_BENEFITS_ROOT}/sa/$utr/child-benefit-entitlement/annual-summary/$taxYear"
+      s"${Configuration.settings.APP_BENEFITS_ROOT}/sa/$utr/winter-fuel-payment-amount/annual-summary/$taxYear"
 
     val response: StandaloneWSResponse = executeRestCall(url)
     val data: JsValue                  = Json.parse(response.body)
 
     Response(response.status, data)
   }
+
+  def getWinterFuelPaymentAmountResponseOTRSA(utr: String, taxYear: String): Response = {
+
+    val url =
+      s"${Configuration.settings.APP_BENEFITS_ROOT}/otrsa/$utr/winter-fuel-payment-amount/annual-summary/$taxYear"
+
+    val response: StandaloneWSResponse = executeRestCall(url)
+    val data: JsValue                  = Json.parse(response.body)
+
+    Response(response.status, data)
+  }
+
 }

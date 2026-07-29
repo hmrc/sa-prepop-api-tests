@@ -27,6 +27,7 @@ trait BaseSpec extends AnyWordSpec with Matchers with BeforeAndAfterAll with Bef
   val specificTestCases: Seq[BaseSaPrePopTestInput] = Seq.empty
   val baseTestCases: Seq[BaseSaPrePopTestInput]     = Seq(
     SuccessSaPrePopTestInput(
+      nino = "CE123457D",
       saUtr = "1097172564",
       taxYearRange = "2017-18",
       expectedStatusCode = 200,
@@ -34,22 +35,25 @@ trait BaseSpec extends AnyWordSpec with Matchers with BeforeAndAfterAll with Bef
       scenario = HAPPY_PATH_1
     ),
     SuccessSaPrePopTestInput(
+      nino = "CE123457D",
       saUtr = "1097172564",
       taxYearRange = "2018-19",
       expectedStatusCode = 200,
       bearerToken = BearerTokenType.Valid,
       scenario = HAPPY_PATH_2
     ),
-//    ErrorSaPrePopTestInput(
-//      saUtr = "109717256-",
-//      taxYearRange = "2017-18",
-//      expectedStatusCode = 400,
-//      expectedResponseErrorCode = "SA_UTR_INVALID",
-//      expectedResponseErrorMessage = "The provided SA UTR is invalid",
-//      bearerToken = BearerTokenType.Valid,
-//      scenario = HAPPY_PATH_1
-//    ),
     ErrorSaPrePopTestInput(
+      nino = "CE123457D",
+      saUtr = "109717256-",
+      taxYearRange = "2017-18",
+      expectedStatusCode = 400,
+      expectedResponseErrorCode = "SA_UTR_INVALID",
+      expectedResponseErrorMessage = "The provided SA UTR is invalid",
+      bearerToken = BearerTokenType.Valid,
+      scenario = HAPPY_PATH_1
+    ),
+    ErrorSaPrePopTestInput(
+      nino = "CE123457D",
       saUtr = "",
       taxYearRange = "2017-18",
       expectedStatusCode = 404,
@@ -59,6 +63,7 @@ trait BaseSpec extends AnyWordSpec with Matchers with BeforeAndAfterAll with Bef
       scenario = HAPPY_PATH_1
     ),
     ErrorSaPrePopTestInput(
+      nino = "CE123457D",
       saUtr = "1097172564",
       taxYearRange = "2017-19",
       expectedStatusCode = 400,
@@ -68,6 +73,7 @@ trait BaseSpec extends AnyWordSpec with Matchers with BeforeAndAfterAll with Bef
       scenario = HAPPY_PATH_1
     ),
     ErrorSaPrePopTestInput(
+      nino = "CE123457D",
       saUtr = "1097172564",
       taxYearRange = "2017-18",
       expectedStatusCode = 401,
@@ -77,6 +83,7 @@ trait BaseSpec extends AnyWordSpec with Matchers with BeforeAndAfterAll with Bef
       scenario = HAPPY_PATH_1
     ),
     ErrorSaPrePopTestInput(
+      nino = "CE123457D",
       saUtr = "1097172564",
       taxYearRange = "2017-18",
       expectedStatusCode = 401,
@@ -86,6 +93,7 @@ trait BaseSpec extends AnyWordSpec with Matchers with BeforeAndAfterAll with Bef
       scenario = HAPPY_PATH_1
     ),
     ErrorSaPrePopTestInput(
+      nino = "CE123457D",
       saUtr = "1097172564",
       taxYearRange = "2017-18",
       expectedStatusCode = 406,
@@ -95,6 +103,7 @@ trait BaseSpec extends AnyWordSpec with Matchers with BeforeAndAfterAll with Bef
       scenario = HAPPY_PATH_1
     ),
     ErrorSaPrePopTestInput(
+      nino = "CE123457D",
       saUtr = "1097172564",
       taxYearRange = "2017-18",
       expectedStatusCode = 401,
@@ -108,5 +117,4 @@ trait BaseSpec extends AnyWordSpec with Matchers with BeforeAndAfterAll with Bef
   def serviceUnderTest: String
 
   def allTestCases: Seq[BaseSaPrePopTestInput] = specificTestCases ++ baseTestCases
-
 }
