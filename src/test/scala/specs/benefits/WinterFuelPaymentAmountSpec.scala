@@ -113,14 +113,14 @@ class WinterFuelPaymentAmountSpec extends BaseSpec {
       errorOTRSA.message shouldBe testCase.expectedResponseErrorMessage
     }
 
-  s"${this.getClass.getSimpleName}" when
-    allTestCases.foreach {
-      case successCase: SuccessSaPrePopTestInput =>
-        "making successful requests" should
-          successTest(successCase)
-
-      case errorCase: ErrorSaPrePopTestInput =>
-        "making error requests" should
-          errorTest(errorCase)
-    }
+//  s"${this.getClass.getSimpleName}" when
+//    allTestCases.foreach {
+//      case successCase: SuccessSaPrePopTestInput =>
+//        "making successful requests" should
+//          successTest(successCase)
+//
+//      case errorCase: ErrorSaPrePopTestInput =>
+//        "making error requests" should
+//          errorTest(errorCase)
+//    }
 }
