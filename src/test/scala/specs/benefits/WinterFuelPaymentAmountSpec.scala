@@ -89,6 +89,15 @@ class WinterFuelPaymentAmountSpec extends BaseSpec {
   def errorTest(testCase: ErrorSaPrePopTestInput): Unit     =
     s"should return ${testCase.expectedStatusCode} when calling winter-fuel-payment-amount with utr: ${testCase.saUtr} and tax year: ${testCase.taxYearRange} and bearer: ${testCase.bearerToken} for scenario: ${testCase.scenario}" in {
 
+      if (testCase.scenario == HAPPY_PATH_2) {
+        createTestUserData(
+          testCase.nino,
+          testCase.taxYearRange,
+          testCase.scenario.toString,
+          serviceUnderTest
+        ) shouldBe 201
+      }
+
       val bearerToken = fetchBearerToken(testCase.bearerToken, testCase.saUtr)
       val headers     =
         if (testCase.expectedStatusCode == 406) HttpHeaders.headersNoAccept(bearerToken)
@@ -113,14 +122,14 @@ class WinterFuelPaymentAmountSpec extends BaseSpec {
       errorOTRSA.message shouldBe testCase.expectedResponseErrorMessage
     }
 
-//  s"${this.getClass.getSimpleName}" when
-//    allTestCases.foreach {
-//      case successCase: SuccessSaPrePopTestInput =>
-//        "making successful requests" should
-//          successTest(successCase)
-//
-//      case errorCase: ErrorSaPrePopTestInput =>
-//        "making error requests" should
-//          errorTest(errorCase)
-//    }
+  s"${this.getClass.getSimpleName}" when
+    allTestCases.foreach {
+      case successCase: SuccessSaPrePopTestInput =>
+        "making successful requests" should
+          successTest(successCase)
+
+      case errorCase: ErrorSaPrePopTestInput =>
+        "making error requests" should
+          errorTest(errorCase)
+    }
 }
