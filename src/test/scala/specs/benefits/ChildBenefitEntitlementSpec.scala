@@ -82,6 +82,15 @@ class ChildBenefitEntitlementSpec extends BaseSpec {
   def errorTest(testCase: ErrorSaPrePopTestInput): Unit =
     s"should return ${testCase.expectedStatusCode} when calling child-benefit-entitlement with UTR: ${testCase.saUtr} and tax year: ${testCase.taxYearRange} and bearer: ${testCase.bearerToken} for scenario: ${testCase.scenario}" in {
 
+      if (testCase.scenario == HAPPY_PATH_2) {
+        createTestUserData(
+          testCase.saUtr,
+          testCase.taxYearRange,
+          testCase.scenario.toString,
+          serviceUnderTest
+        ) shouldBe 201
+      }
+
       val bearerToken = fetchBearerToken(testCase.bearerToken, testCase.saUtr)
 
       val headers =
